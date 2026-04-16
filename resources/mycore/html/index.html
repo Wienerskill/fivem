@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Charakter System & Admin Dashboard</title>
+</head>
+<body>
+    <div id="container">
+        <div id="selection-screen" class="screen" style="display:none;">
+            <h1 class="ui-title">DEINE CHARAKTERE</h1>
+            <div id="char-slots"></div>
+        </div>
+
+        <div id="identity-screen" class="screen" style="display:none;">
+            <div class="id-card">
+                <div class="id-card-header">
+                    <span class="id-card-title">IDENTITÄTSKARTE</span>
+                    <span class="id-card-region">STATE OF SAN ANDREAS</span>
+                </div>
+                
+                <div class="id-card-body">
+                    <div class="id-photo-placeholder">
+                        <div class="photo-inner">PASSFOTO</div>
+                    </div>
+                    
+                    <div class="id-fields">
+                        <div class="input-group">
+                            <label>VORNAME</label>
+                            <input type="text" id="firstname" placeholder="MAX" maxlength="20">
+                        </div>
+                        <div class="input-group">
+                            <label>NACHNAME</label>
+                            <input type="text" id="lastname" placeholder="MUSTERNAMEN" maxlength="20">
+                        </div>
+                        <div class="input-group">
+                            <label>GEBURTSDATUM</label>
+                            <input type="date" id="birthdate">
+                        </div>
+                        <div class="id-meta">
+                            <div class="meta-item">
+                                <label>CITIZEN-ID</label>
+                                <span>WIRD GENERIERT</span>
+                            </div>
+                            <div class="meta-item">
+                                <label>STATUS</label>
+                                <span style="color: #27ae60;">GÜLTIG</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="id-submit-btn" onclick="submitIdentity()">AUSWEIS AUSSTELLEN & EINREISEN</button>
+            </div>
+        </div>
+
+        <div id="creator-screen" class="screen" style="display:none;">
+            <div class="side-panel">
+                <h2 class="panel-title">CHARAKTER EDITOR</h2>
+                <p class="panel-hint">Ziehen zum Drehen & Höhe ändern</p>
+                
+                <div class="control-group">
+                    <button class="btn-gender active" id="btn-male" onclick="updateGender('male')">MÄNNLICH</button>
+                    <button class="btn-gender" id="btn-female" onclick="updateGender('female')">WEIBLICH</button>
+                </div>
+
+                <div class="scroll-container">
+                    <div class="control-item">
+                        <label>GESICHTSFORM</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('face', -1)">◀</button>
+                            <input type="number" id="face-num" value="0" readonly>
+                            <button onclick="changeVal('face', 1)">▶</button>
+                        </div>
+                    </div>
+                    <div class="control-item">
+                        <label>HAARE</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('hair', -1)">◀</button>
+                            <input type="number" id="hair-num" value="0" readonly>
+                            <button onclick="changeVal('hair', 1)">▶</button>
+                        </div>
+                        <input type="range" id="hair-slider" value="0" oninput="sync('hair', this.value)">
+                    </div>
+                    <div class="control-item">
+                        <label>HÜTE / HELME</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('hat', -1)">◀</button>
+                            <input type="number" id="hat-num" value="-1" readonly>
+                            <button onclick="changeVal('hat', 1)">▶</button>
+                        </div>
+                        <input type="range" id="hat-slider" value="-1" min="-1" oninput="sync('hat', this.value)">
+                    </div>
+                    <div class="control-item">
+                        <label>MASKE</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('mask', -1)">◀</button>
+                            <input type="number" id="mask-num" value="0" readonly>
+                            <button onclick="changeVal('mask', 1)">▶</button>
+                        </div>
+                        <input type="range" id="mask-slider" value="0" oninput="sync('mask', this.value)">
+                    </div>
+                    <div class="control-item">
+                        <label>OBERTEIL (JACKE)</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('tshirt', -1)">◀</button>
+                            <input type="number" id="tshirt-num" value="0" readonly>
+                            <button onclick="changeVal('tshirt', 1)">▶</button>
+                        </div>
+                        <input type="range" id="tshirt-slider" value="0" oninput="sync('tshirt', this.value)">
+                    </div>
+                    <div class="control-item">
+                        <label>UNTERZIEHER</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('undershirt', -1)">◀</button>
+                            <input type="number" id="undershirt-num" value="0" readonly>
+                            <button onclick="changeVal('undershirt', 1)">▶</button>
+                        </div>
+                        <input type="range" id="undershirt-slider" value="0" oninput="sync('undershirt', this.value)">
+                    </div>
+                    <div class="control-item">
+                        <label>ARME / TORSO</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('arms', -1)">◀</button>
+                            <input type="number" id="arms-num" value="0" readonly>
+                            <button onclick="changeVal('arms', 1)">▶</button>
+                        </div>
+                        <input type="range" id="arms-slider" value="0" oninput="sync('arms', this.value)">
+                    </div>
+                    <div class="control-item">
+                        <label>HOSE</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('pants', -1)">◀</button>
+                            <input type="number" id="pants-num" value="0" readonly>
+                            <button onclick="changeVal('pants', 1)">▶</button>
+                        </div>
+                        <input type="range" id="pants-slider" value="0" oninput="sync('pants', this.value)">
+                    </div>
+                    <div class="control-item">
+                        <label>SCHUHE</label>
+                        <div class="precise-input">
+                            <button onclick="changeVal('shoes', -1)">◀</button>
+                            <input type="number" id="shoes-num" value="0" readonly>
+                            <button onclick="changeVal('shoes', 1)">▶</button>
+                        </div>
+                        <input type="range" id="shoes-slider" value="0" oninput="sync('shoes', this.value)">
+                    </div>
+                </div>
+                <button class="save-btn" onclick="saveDesign()">FERTIGSTELLEN & STARTEN</button>
+            </div>
+        </div>
+
+        <div id="player-admin-screen" class="admin-dashboard" style="display:none;">
+            <div class="dashboard-header">
+                <div class="header-left"><i class="fa-solid fa-users-gear"></i> SPIELER VERWALTUNG</div>
+                <div class="header-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="player-search" placeholder="ID, Name oder CID suchen..." oninput="filterPlayers()">
+                </div>
+                <div class="header-right" onclick="closePlayerAdmin()"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+
+            <div id="player-grid" class="player-grid"></div>
+
+            <div id="player-detail-modal" class="detail-modal" style="display:none;">
+                <div class="modal-content">
+                    <div class="modal-left">
+                        <div id="detail-header" class="modal-header-name">VORNAME NACHNAME</div>
+                        <div class="modal-info-grid">
+                            <div class="info-item"><label>SERVER ID</label><span id="det-id">-</span></div>
+                            <div class="info-item"><label>CITIZEN ID</label><span id="det-cid">-</span></div>
+                            <div class="info-item"><label>GEBURTSDATUM</label><span id="det-birth">-</span></div>
+                            <div class="info-item"><label>BEIGETRETEN AM</label><span id="det-join">-</span></div>
+                            <div class="info-item"><label>GESAMT SPIELZEIT</label><span id="det-time">-</span></div>
+                        </div>
+                        <div class="modal-bars">
+                            <label>HP</label><div class="bar-bg"><div id="det-hp-bar" class="bar-fill" style="background:#e74c3c;"></div></div>
+                            <label>ARMOR</label><div class="bar-bg"><div id="det-arm-bar" class="bar-fill" style="background:#3498db;"></div></div>
+                        </div>
+                        <button class="modal-close-btn" onclick="closeDetailModal()">ZURÜCK ZUR ÜBERSICHT</button>
+                    </div>
+                    <div class="modal-right">
+                        <div class="view-3d-hint">
+                            <i class="fa-solid fa-video"></i>
+                            <p>3D VORSCHAU AKTIV</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="hud-screen" style="display:none;">
+        <div class="hud-item">
+            <svg class="hud-svg" viewBox="0 0 50 50">
+                <circle class="hud-bg" cx="25" cy="25" r="20"></circle>
+                <circle id="hud-health" class="hud-bar" cx="25" cy="25" r="20" stroke="#e74c3c"></circle>
+            </svg>
+            <i class="fa-solid fa-heart hud-icon" style="color: #e74c3c;"></i>
+        </div>
+        <div class="hud-item">
+            <svg class="hud-svg" viewBox="0 0 50 50">
+                <circle class="hud-bg" cx="25" cy="25" r="20"></circle>
+                <circle id="hud-armor" class="hud-bar" cx="25" cy="25" r="20" stroke="#3498db"></circle>
+            </svg>
+            <i class="fa-solid fa-shield-halved hud-icon" style="color: #3498db;"></i>
+        </div>
+        <div class="hud-item">
+            <svg class="hud-svg" viewBox="0 0 50 50">
+                <circle class="hud-bg" cx="25" cy="25" r="20"></circle>
+                <circle id="hud-food" class="hud-bar" cx="25" cy="25" r="20" stroke="#e67e22"></circle>
+            </svg>
+            <i class="fa-solid fa-burger hud-icon" style="color: #e67e22;"></i>
+        </div>
+        <div class="hud-item">
+            <svg class="hud-svg" viewBox="0 0 50 50">
+                <circle class="hud-bg" cx="25" cy="25" r="20"></circle>
+                <circle id="hud-water" class="hud-bar" cx="25" cy="25" r="20" stroke="#00bcd4"></circle>
+            </svg>
+            <i class="fa-solid fa-droplet hud-icon" style="color: #00bcd4;"></i>
+        </div>
+    </div>
+
+    <div id="admin-menu" class="menu-container" style="display:none;">
+        <div class="menu-header">ADMIN PANEL</div>
+        <div class="menu-items">
+            <div class="menu-item active" data-action="godmode">GODMODE: <span id="godmode-status">AUS</span></div>
+            <div class="menu-item" data-action="noclip">NOCLIP: <span id="noclip-status">AUS</span></div>
+            <div class="menu-item" data-action="heal">SPIELER HEILEN</div>
+            <div class="menu-item" data-action="armor">PANZERUNG GEBEN (100%)</div>
+            <div class="menu-item" data-action="revive">SPIELER WIEDERBELEBEN</div>
+        </div>
+        <div class="menu-footer">
+            <span>↑↓ Navigieren</span> | <span>ENTER Bestätigen</span> | <span>ESC Schließen</span>
+        </div>
+    </div>
+
+    <div id="context-menu" style="display:none; position: absolute; background: #222; border: 1px solid #444; border-radius: 4px; padding: 5px; z-index: 1000; width: 180px;">
+        <div class="ctx-item" onclick="triggerAdminAction('heal')">Heilen (100%)</div>
+        <div class="ctx-item" onclick="triggerAdminAction('armor')">Weste (100%)</div>
+        <div class="ctx-item" onclick="triggerAdminAction('revive')">Wiederbeleben</div>
+        <div class="ctx-item" onclick="triggerAdminAction('freeze')">Freeze / Unfreeze</div>
+        <hr style="border-color: #444; margin: 5px 0;">
+        <div class="ctx-item" style="color: #e74c3c;" onclick="triggerAdminAction('kick')">Spieler Kicken</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
