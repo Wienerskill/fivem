@@ -1,0 +1,240 @@
+/**
+ * ============================================================
+ * INVENTORY SYSTEM - STYLESHEET
+ * ============================================================
+ */
+
+/* Google Font Import (Oswald passt gut zum modernen Look) */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&display=swap');
+
+/* Haupt-Container des Inventars */
+#inventory-container {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    z-index: 2000;
+}
+
+/* Wrapper für die zwei Spalten */
+.inventory-wrapper {
+    width: 1200px;
+    height: 800px;
+    display: flex;
+    gap: 60px;
+    padding: 20px;
+}
+
+/* ==========================================
+   LINKE SEITE: KÖRPER & QUICKSLOTS
+   ========================================== */
+.inventory-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Silhouette Bereich */
+.silhouette-container {
+    position: relative;
+    width: 400px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, transparent 80%);
+}
+
+.silhouette-img {
+    height: 100%;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+    opacity: 0.35;
+    filter: brightness(0.4) drop-shadow(0 0 10px rgba(0,0,0,0.5));
+    pointer-events: none; /* Man klickt durch das Bild auf die Slots */
+}
+
+/* Basis Styling für jeden Slot (Grid & Equip) */
+.slot {
+    width: 75px;
+    height: 75px;
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.15);
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+}
+
+.slot:hover {
+    border-color: #3498db;
+    background: rgba(35, 35, 35, 0.95);
+    color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.2);
+    transform: scale(1.02);
+}
+
+/* Positionierung der Kleidungsslots um die Silhouette */
+.equip-slot {
+    position: absolute;
+    z-index: 10;
+}
+
+#slot-head  { top: 5%;  left: 10%; }
+#slot-mask  { top: 20%; left: 5%; }
+#slot-torso { top: 38%; left: 5%; }
+#slot-legs  { top: 60%; left: 5%; }
+#slot-feet  { top: 82%; left: 10%; }
+
+/* Quickslots unter der Silhouette */
+.quickslots-wrapper {
+    margin-top: 40px;
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.q-slot {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #222;
+}
+
+.slot-number {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 13px;
+    color: #3498db;
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(0,0,0,0.8);
+}
+
+/* Spezial-Look für Waffen-Quickslots */
+.q-slot.weapon {
+    border-color: rgba(230, 126, 34, 0.4);
+}
+.q-slot.weapon:hover {
+    border-color: #e67e22;
+}
+
+/* ==========================================
+   RECHTE SEITE: TASCHEN GRID
+   ========================================== */
+.inventory-right {
+    flex: 1.3;
+    background: rgba(12, 12, 12, 0.96);
+    border-radius: 15px;
+    border: 1px solid #252525;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+.inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.inv-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #eee;
+    text-transform: uppercase;
+}
+
+/* Gewichts-Anzeige */
+.weight-container {
+    width: 280px;
+    height: 22px;
+    background: #0a0a0a;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+#weight-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    width: 0%; /* Wird per JS gesteuert */
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+#weight-label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    line-height: 22px;
+    font-weight: 500;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    z-index: 5;
+}
+
+/* Das eigentliche Grid für die Items */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    overflow-y: auto;
+    padding-right: 15px;
+    flex-grow: 1;
+}
+
+/* Scrollbar für das Grid */
+.grid-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.grid-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.grid-container::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
+
+.grid-container::-webkit-scrollbar-thumb:hover {
+    background: #3498db;
+}
+
+/* Item Bilder in den Slots */
+.item-img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+    pointer-events: none;
+}
+
+/* Hilfs-Klassen für JS (Drag & Drop) */
+.slot.active-item {
+    border-color: #3498db;
+    background: rgba(52, 152, 219, 0.1);
+}
+
+.dragging {
+    opacity: 0.5;
+    transform: scale(0.9);
+}
