@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="inventory.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Charakter System & Admin Dashboard</title>
 </head>
 <body>
     <div id="container">
+        
         <div id="selection-screen" class="screen" style="display:none;">
             <h1 class="ui-title">DEINE CHARAKTERE</h1>
-            <div id="char-slots"></div>
+            <div id="char-slots">
+                </div>
         </div>
 
         <div id="identity-screen" class="screen" style="display:none;">
@@ -73,7 +76,9 @@
                             <input type="number" id="face-num" value="0" readonly>
                             <button onclick="changeVal('face', 1)">▶</button>
                         </div>
+                        <input type="range" id="face-slider" value="0" oninput="sync('face', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>HAARE</label>
                         <div class="precise-input">
@@ -83,6 +88,7 @@
                         </div>
                         <input type="range" id="hair-slider" value="0" oninput="sync('hair', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>HÜTE / HELME</label>
                         <div class="precise-input">
@@ -92,6 +98,7 @@
                         </div>
                         <input type="range" id="hat-slider" value="-1" min="-1" oninput="sync('hat', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>MASKE</label>
                         <div class="precise-input">
@@ -101,6 +108,7 @@
                         </div>
                         <input type="range" id="mask-slider" value="0" oninput="sync('mask', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>OBERTEIL (JACKE)</label>
                         <div class="precise-input">
@@ -110,6 +118,7 @@
                         </div>
                         <input type="range" id="tshirt-slider" value="0" oninput="sync('tshirt', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>UNTERZIEHER</label>
                         <div class="precise-input">
@@ -119,6 +128,7 @@
                         </div>
                         <input type="range" id="undershirt-slider" value="0" oninput="sync('undershirt', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>ARME / TORSO</label>
                         <div class="precise-input">
@@ -128,6 +138,7 @@
                         </div>
                         <input type="range" id="arms-slider" value="0" oninput="sync('arms', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>HOSE</label>
                         <div class="precise-input">
@@ -137,6 +148,7 @@
                         </div>
                         <input type="range" id="pants-slider" value="0" oninput="sync('pants', this.value)">
                     </div>
+
                     <div class="control-item">
                         <label>SCHUHE</label>
                         <div class="precise-input">
@@ -189,9 +201,40 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="hud-screen" style="display:none;">
+        <div id="inventory-container" style="display:none;">
+            <div class="inventory-wrapper">
+                <div class="inventory-left">
+                    <div class="equip-list">
+                        <div class="slot equip-slot" id="slot-head" data-type="head"><i class="fa-solid fa-hat-cowboy"></i></div>
+                        <div class="slot equip-slot" id="slot-mask" data-type="mask"><i class="fa-solid fa-mask"></i></div>
+                        <div class="slot equip-slot" id="slot-torso" data-type="torso"><i class="fa-solid fa-shirt"></i></div>
+                        <div class="slot equip-slot" id="slot-legs" data-type="legs"><i class="fa-solid fa-socks"></i></div>
+                        <div class="slot equip-slot" id="slot-feet" data-type="feet"><i class="fa-solid fa-shoe-prints"></i></div>
+                        <div class="slot equip-slot weapon-slot" id="slot-weapon" data-type="weapon"><i class="fa-solid fa-gun"></i></div>
+                    </div>
+                    <div class="quickslots-wrapper">
+                        <div class="slot q-slot weapon" id="qslot-1" data-id="1" data-type="quick"><span class="slot-number">1</span><i class="fa-solid fa-gun"></i></div>
+                        <div class="slot q-slot weapon" id="qslot-2" data-id="2" data-type="quick"><span class="slot-number">2</span><i class="fa-solid fa-person-rifle"></i></div>
+                        <div class="slot q-slot" id="qslot-3" data-id="3" data-type="quick"><span class="slot-number">3</span></div>
+                        <div class="slot q-slot" id="qslot-4" data-id="4" data-type="quick"><span class="slot-number">4</span></div>
+                        <div class="slot q-slot" id="qslot-5" data-id="5" data-type="quick"><span class="slot-number">5</span></div>
+                    </div>
+                </div>
+                <div class="inventory-right">
+                    <div class="inv-header">
+                        <div class="inv-title">TASCHEN</div>
+                        <div class="weight-container">
+                            <div id="weight-bar"></div>
+                            <span id="weight-label">0.0 / 30.0 KG</span>
+                        </div>
+                    </div>
+                    <div id="inventory-grid" class="grid-container"></div>
+                </div>
+            </div>
+        </div>
+
+    </div> <div id="hud-screen" style="display:none;">
         <div class="hud-item">
             <svg class="hud-svg" viewBox="0 0 50 50">
                 <circle class="hud-bg" cx="25" cy="25" r="20"></circle>
@@ -223,28 +266,24 @@
     </div>
 
     <div id="admin-menu" class="menu-container" style="display:none;">
-        <div class="menu-header">ADMIN PANEL</div>
+        <div class="menu-header">ADMIN MENU</div>
         <div class="menu-items">
-            <div class="menu-item active" data-action="godmode">GODMODE: <span id="godmode-status">AUS</span></div>
-            <div class="menu-item" data-action="noclip">NOCLIP: <span id="noclip-status">AUS</span></div>
-            <div class="menu-item" data-action="heal">SPIELER HEILEN</div>
-            <div class="menu-item" data-action="armor">PANZERUNG GEBEN (100%)</div>
-            <div class="menu-item" data-action="revive">SPIELER WIEDERBELEBEN</div>
+            <div class="menu-item" data-action="noclip">NOCLIP</div>
+            <div class="menu-item" data-action="godmode">GODMODE</div>
+            <div class="menu-item" data-action="heal">HEAL</div>
+            <div class="menu-item" data-action="armor">WESTE</div>
+            <div class="menu-item" data-action="revive">REVIVE</div>
         </div>
-        <div class="menu-footer">
-            <span>↑↓ Navigieren</span> | <span>ENTER Bestätigen</span> | <span>ESC Schließen</span>
-        </div>
+        <div class="menu-footer">F10 zum Schließen</div>
     </div>
 
-    <div id="context-menu" style="display:none; position: absolute; background: #222; border: 1px solid #444; border-radius: 4px; padding: 5px; z-index: 1000; width: 180px;">
-        <div class="ctx-item" onclick="triggerAdminAction('heal')">Heilen (100%)</div>
-        <div class="ctx-item" onclick="triggerAdminAction('armor')">Weste (100%)</div>
-        <div class="ctx-item" onclick="triggerAdminAction('revive')">Wiederbeleben</div>
-        <div class="ctx-item" onclick="triggerAdminAction('freeze')">Freeze / Unfreeze</div>
-        <hr style="border-color: #444; margin: 5px 0;">
-        <div class="ctx-item" style="color: #e74c3c;" onclick="triggerAdminAction('kick')">Spieler Kicken</div>
+    <div id="context-menu" style="display:none; position: absolute; background: #222; border: 1px solid #444; border-radius: 4px; padding: 5px; z-index: 10000; width: 180px;">
+        <div class="ctx-item" style="padding: 10px; cursor: pointer; color: white;" onclick="triggerAdminAction('heal')">Heilen (100%)</div>
+        <div class="ctx-item" style="padding: 10px; cursor: pointer; color: white;" onclick="triggerAdminAction('armor')">Weste (100%)</div>
+        <div class="ctx-item" style="padding: 10px; cursor: pointer; color: #e74c3c;" onclick="triggerAdminAction('kick')">Spieler Kicken</div>
     </div>
 
     <script src="script.js"></script>
+    <script src="inventory.js"></script>
 </body>
 </html>
