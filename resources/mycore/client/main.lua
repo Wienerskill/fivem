@@ -2,6 +2,8 @@ local currentCID = nil
 local charFname = "" 
 local charLname = "" 
 local isStarted = false
+local invOpen = false  -- Für Inventar Toggle
+local lastInvToggle = 0  -- Cooldown für F2
 
 -- ==========================================
 -- 1. HUD & CACHE LOOPS
@@ -185,4 +187,72 @@ RegisterNetEvent('core:reRegisterRequest', function()
         -- Wenn wir eingeloggt sind, schicken wir unsere Daten einfach nochmal hoch
         TriggerServerEvent('core:setPlayerActive', currentCID, charFname, charLname)
     end
+end)
+
+-- ==========================================
+-- INVENTAR SYSTEM
+-- ==========================================
+
+-- F2 für Inventar
+RegisterKeyMapping('openinventory', 'Inventar öffnen/schließen', 'keyboard', 'F2')
+RegisterCommand('openinventory', function()
+    local now = GetGameTimer()
+    if now - lastInvToggle < 500 then return end  -- Cooldown 500ms
+    lastInvToggle = now
+    if invOpen then
+        TriggerServerEvent('closeInventory')
+    else
+        TriggerServerEvent('openInventory')
+    end
+end, false)
+
+-- UI Events
+RegisterNetEvent('toggleInventory', function(state, data)
+    if state then
+        invOpen = true
+        SendNUIMessage({
+            action = "toggleInventory",
+            state = true,
+            items = data.items,
+            currentWeight = data.currentWeight,
+            maxWeight = data.maxWeight,
+            maxSlots = data.maxSlots
+        })
+        SetNuiFocus(true, true)
+    else
+        invOpen = false
+        SendNUIMessage({
+            action = "toggleInventory",
+            state = false
+        })
+        SetNuiFocus(false, false)
+    end
+end)
+
+RegisterNetEvent('updateInventory', function(data)
+    if invOpen then
+        SendNUIMessage({
+            action = "updateInventory",
+            items = data.items,
+            currentWeight = data.currentWeight,
+            maxWeight = data.maxWeight,
+            maxSlots = data.maxSlots
+        })
+    end
+end)
+
+-- NUI Callbacks
+RegisterNUICallback('moveItem', function(data, cb)
+    TriggerServerEvent('moveItem', data)
+    cb('ok')
+end)
+
+RegisterNUICallback('closeInventory', function(data, cb)
+    TriggerServerEvent('closeInventory')
+    cb('ok')
+end)
+
+RegisterNUICallback('equipWeapon', function(data, cb)
+    TriggerServerEvent('equipWeapon', data)
+    cb('ok')
 end)
